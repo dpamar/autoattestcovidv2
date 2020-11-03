@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<title>Generateur de feuille de g&eacute;n&eacute;rateurs</title>
+		<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+		</style>
+		<script src="qrcode.js"></script>
+		<script>
+			var g = x=> document.getElementById(x);
+var v = x=> g(x).value;
+var hide = x=> {g(x).style.visibility = 'hidden'; g(x).style.display='none'; g(x).style.width='0%'}
+var show = x=> {g(x).style.visibility = 'visible'; g(x).style.display='inline'; g(x).style.width='100%'}
+
+function hide_form_head(i, j)
+{
+	hide('form_head_'+i+'_'+j);
+	show('head_'+i+'_'+j);
+	g('head_'+i+'_'+j).innerHTML = '<p width="100%" onclick="show_form_head('+i+', '+j+')">'+v('tb_head_'+i+'_'+j)+'</p>';
+}
+
+function hide_form_code(i, j)
+{
+	hide('form_code_'+i+'_'+j);
+	show('code_'+i+'_'+j);
+	g('code_'+i+'_'+j).innerHTML = '<table style="width: 100%; border: none"><tr style="border: none;"><td style="border: none; width: 50%" >&nbsp;</td><td style="border: none" id="finalcode_'+i+'_'+j+'" onclick="show_form_code('+i+', '+j+');"></td><td style="border: none; width: 50%" >&nbsp;</td></tr></table>';
+	new QRCode(document.getElementById('finalcode_'+i+'_'+j), genUrl(i,j));
+}
+
+function show_form_head(i, j)
+{
+	show('form_head_'+i+'_'+j);
+	hide('head_'+i+'_'+j);
+}
+
+function show_form_code(i, j)
+{
+	show('form_code_'+i+'_'+j);
+	hide('code_'+i+'_'+j);
+}
+
+function header_block(i, j)
+{
+	return '<div id="head_'+i+'_'+j+'" style="width: 0%; font-size: 24; text-align: center; visibility: hidden; display: none">&nbsp;</div>'+
+	'<div id="form_head_'+i+'_'+j+'" style="width: 100%">'+
+	'<input style="width: 80%" type="text" id="tb_head_'+i+'_'+j+'" value="En-t&ecirc;te"/>'+
+	'<input style="width: 20%" type="button" value="Valider" onclick="hide_form_head('+i+', '+j+')" />'+
+'</div>';
+}
+
+function qr_block(i, j)
+{
+	return '<div id="code_'+i+'_'+j+'" style="width: 0%; font-size: 24; text-align: center; visibility: hidden; display: none"></div>'+
+	'<div id="form_code_'+i+'_'+j+'" style="width: 100%">'+
+	'Nom: <input style="width: 350px" type="text" id="tb_nom_'+i+'_'+j+'"/><br/>'+
+	'Prenom: <input style="width: 350px" type="text" id="tb_prenom_'+i+'_'+j+'"/><br/>'+
+	'Date de naissance: <input style="width: 350px" type="text" id="tb_date_'+i+'_'+j+'"/><br/>'+
+	'Lieu de naissance: <input style="width: 350px" type="text" id="tb_lieu_'+i+'_'+j+'"/><br/>'+
+	'Adresse: <input style="width: 350px" type="text" id="tb_adresse_'+i+'_'+j+'"/><br/>'+
+	'Ville: <input style="width: 350px" type="text" id="tb_ville_'+i+'_'+j+'"/><br/>'+
+	'Code postal: <input style="width: 350px" type="text" id="tb_cp_'+i+'_'+j+'"/><br/>'+
+	'Raison: <input style="width: 350px" type="text" id="tb_raison_'+i+'_'+j+'" value="enfants ou sport_animaux ou achats ou travail"/><br/>'+
+	'<input style="width: 20%" type="button" value="Valider" onclick="hide_form_code('+i+', '+j+')" />'+
+'</div>';
+}
+
+function configuration(conf_id)
+{
+	g('configSelector').style.visibility = 'hidden';
+	code = '';
+	switch(conf_id) {
+		case 0:
+			rows = 2;
+			cols = 2;
+			for(var i=0; i<rows; i++)
+			{
+				code += '<tr>';
+				for(var j=0; j<cols; j++) code += '<td style="width: 50%">' + header_block(i, j) + '</td>';
+				code += '</tr>';
+				code += '<tr>';
+				for(var j=0; j<cols; j++) code += '<td style="width: 50%; height: 400px">' + qr_block(i, j) + '</td>';
+				code += '</tr>';
+			}
+			break;
+		case 1:
+			row = 3;
+			col = 2;
+			code = '<tr><td style="width: 100px; height: 50px;">&nbsp;</td>'+
+				'<td style="width: 400px;">'+header_block(0,0)+'</td>'+
+				'<td style="width: 400px;">'+header_block(0,1)+'</td></tr>';
+			for(var i=1; i<=row; i++)
+			{
+				code += '<tr>';
+				code += '<td style="width: 100px;">'+header_block(1,i)+'</td>';
+				for(var j=1; j<=col; j++)
+					code += '<td style="height: 300px">' + qr_block(i, j) + '</td>';
+				code += '</tr>';
+			}
+	}
+
+	g('table').innerHTML = code;
+}
+
+function genUrl(i, j) {
+	tb = x => v('tb_'+x+'_'+i+'_'+j);
+	return 'https://dpamar.github.io/autoattestcovidv2/?firstname='+tb('nom')+
+		'&lastname='+tb('prenom')+
+		'&birthday='+tb('date')+
+		'&placeofbirth='+tb('lieu')+
+		'&address='+tb('adresse')+
+		'&city='+tb('ville')+
+		'&zipcode='+tb('cp')+
+		'&cb=' + tb('raison');
+}
+		</script>
+	</head>
+	<body>
+		<div id="configSelector">
+			Choisir une configuration
+			<input type="button" value="2x2" onclick="configuration(0)"/>
+			<input type="button" value="2x3" onclick="configuration(1)"/>
+		</div>
+		<table id='table' style="width: 100%"></table>
+	</body>
+</html>
