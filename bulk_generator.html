@@ -55,13 +55,13 @@ function qr_block(i, j)
 	return '<div id="code_'+i+'_'+j+'" style="width: 0%; font-size: 24; text-align: center; visibility: hidden; display: none"></div>'+
 	'<div id="form_code_'+i+'_'+j+'" style="width: 100%">'+
 		'Nom: <input style="width: 350px" type="text" id="tb_nom_'+i+'_'+j+'"/><br/><br/>'+
-		'Prenom: <input style="width: 350px" type="text" id="tb_prenom_'+i+'_'+j+'"/><br/><br/>'+
+		'Prenom: <input style="width: 350px" type="text" id="tb_firstname_'+i+'_'+j+'"/><br/><br/>'+
 		'Date de naissance: <input style="width: 350px" type="text" id="tb_date_'+i+'_'+j+'"/><br/><br/>'+
 		'Lieu de naissance: <input style="width: 350px" type="text" id="tb_lieu_'+i+'_'+j+'"/><br/><br/>'+
 		'Adresse: <input style="width: 350px" type="text" id="tb_adresse_'+i+'_'+j+'"/><br/><br/>'+
 		'Ville: <input style="width: 350px" type="text" id="tb_ville_'+i+'_'+j+'"/><br/><br/>'+
 		'Code postal: <input style="width: 350px" type="text" id="tb_cp_'+i+'_'+j+'"/><br/><br/>'+
-		'Raison: <input style="width: 350px" type="text" id="tb_raison_'+i+'_'+j+'" value="enfants ou sport_animaux ou achats ou travail"/><br/><br/>'+
+		'Raison: <input style="width: 350px" type="text" id="tb_raison_'+i+'_'+j+'" value="enfants et|ou sport_animaux et|ou achats et|ou travail"/><br/><br/>'+
 	'<input style="width: 20%" type="button" value="Valider" onclick="hide_form_code('+i+', '+j+')" />'+
 '</div>';
 }
@@ -106,13 +106,13 @@ function configuration(conf_id)
 function genUrl(i, j) {
 	tb = x => v('tb_'+x+'_'+i+'_'+j);
 	return 'https://dpamar.github.io/autoattestcovidv2/?firstname='+tb('nom')+
-		'&lastname='+tb('prenom')+
+		'&lastname='+tb('firstname')+
 		'&birthday='+tb('date')+
 		'&placeofbirth='+tb('lieu')+
 		'&address='+tb('adresse')+
 		'&city='+tb('ville')+
-		'&zipcode='+tb('cp')+
-		'&cb=' + tb('raison');
+		'&zipcode='+tb('cp')+ 
+		tb('raison').split(' ').map(x=>'&cb='+x).join('');
 }
 		</script>
 	</head>
