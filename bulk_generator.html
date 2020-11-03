@@ -87,7 +87,7 @@ function configuration(conf_id)
 		case 1:
 			row = 3;
 			col = 2;
-			code = '<tr><td style="width: 100px; height: 50px;">&nbsp;</td>'+
+			code = '<tr><td style="width: 100px; height: 40px;">&nbsp;</td>'+
 				'<td style="width: 400px;">'+header_block(0,0)+'</td>'+
 				'<td style="width: 400px;">'+header_block(0,1)+'</td></tr>';
 			for(var i=1; i<=row; i++)
@@ -95,7 +95,7 @@ function configuration(conf_id)
 				code += '<tr>';
 				code += '<td style="width: 100px;">'+header_block(1,i)+'</td>';
 				for(var j=1; j<=col; j++)
-					code += '<td style="height: 300px">' + qr_block(i, j) + '</td>';
+					code += '<td style="height: 275px">' + qr_block(i, j) + '</td>';
 				code += '</tr>';
 			}
 	}
